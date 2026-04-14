@@ -239,35 +239,84 @@
 
   /* BUY / CTA */
   .cta-section {
-    background: var(--accent); padding: 100px 80px;
+    background: var(--accent); padding: 80px 80px 60px;
     display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
-    align-items: center;
+    align-items: start;
   }
   .cta-section .section-title { color: var(--dark); }
   .cta-section .section-label { color: rgba(0,0,0,0.5); }
-  .price-block { margin-bottom: 32px; }
-  .price-tag {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 5rem; color: var(--dark); line-height: 1;
-  }
-  .price-sub { font-size: 0.9rem; font-weight: 600; color: rgba(0,0,0,0.55); letter-spacing: 1px; text-transform: uppercase; }
-  .btn-dark {
-    background: var(--dark); color: var(--white);
-    font-family: 'Barlow Condensed', sans-serif;
-    font-weight: 900; font-size: 1.1rem; letter-spacing: 3px; text-transform: uppercase;
-    padding: 18px 52px; text-decoration: none; display: inline-block;
-    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
-    transition: transform 0.15s;
-  }
-  .btn-dark:hover { transform: scale(1.03); }
-  .cta-perks { list-style: none; margin-top: 24px; display: flex; flex-direction: column; gap: 10px; }
-  .cta-perks li { font-size: 0.9rem; font-weight: 600; color: rgba(0,0,0,0.65); }
-  .cta-perks li::before { content: '✓ '; color: var(--dark); }
   .cta-logo-big {
     font-family: 'Bebas Neue', sans-serif;
     font-size: clamp(4rem, 8vw, 9rem); line-height: 0.85;
     color: rgba(0,0,0,0.12); letter-spacing: 4px;
   }
+
+  /* PRE-ORDER FORM */
+  .preorder-form {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.15);
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .preorder-form h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; letter-spacing: 3px; color: var(--navy);
+    border-bottom: 3px solid var(--accent); padding-bottom: 12px;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.75rem; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--navy);
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    border: 2px solid #ddd; border-radius: 2px;
+    padding: 12px 14px; font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem; color: var(--dark);
+    transition: border-color 0.2s; background: #fafafa;
+    outline: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--navy); background: var(--white); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-group select { cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a2a5e' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+  }
+  .option-price {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--off-white); border: 2px solid #eee;
+    padding: 10px 14px; border-radius: 2px; font-size: 0.9rem;
+  }
+  .option-price span:last-child { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--navy); letter-spacing: 1px; }
+  .custom-note {
+    background: #fff8e1; border-left: 4px solid var(--accent);
+    padding: 12px 16px; font-size: 0.88rem; color: #555; line-height: 1.5;
+    display: none;
+  }
+  .custom-note a { color: var(--navy); font-weight: 700; }
+  .btn-submit {
+    background: var(--navy); color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 1.1rem; letter-spacing: 3px; text-transform: uppercase;
+    padding: 18px; border: none; cursor: pointer;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: transform 0.15s, background 0.15s;
+    width: 100%;
+  }
+  .btn-submit:hover { transform: scale(1.02); background: var(--blue); }
+  .form-success {
+    display: none; text-align: center; padding: 20px;
+    background: #e8f5e9; border: 2px solid #66bb6a; border-radius: 2px;
+  }
+  .form-success h4 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: #2e7d32; letter-spacing: 2px; margin-bottom: 6px; }
+  .form-success p { font-size: 0.9rem; color: #555; }
 
   /* FOOTER */
   footer {
@@ -297,7 +346,8 @@
 
   /* Responsive */
   @media (max-width: 900px) {
-    .hero, .how-grid, .product-section, .cta-section { grid-template-columns: 1fr; padding: 80px 24px; }
+    .hero, .how-grid, .product-section, .cta-section { grid-template-columns: 1fr; padding: 60px 24px; }
+    .form-row { grid-template-columns: 1fr; }
     .hero { padding-top: 120px; }
     .section { padding: 70px 24px; }
     .video-grid { grid-template-columns: 1fr; }
@@ -320,7 +370,7 @@
   <ul class="nav-links">
     <li><a href="#how">How to Play</a></li>
     <li><a href="#videos">Videos</a></li>
-    <li><a href="#product">The Game</a></li>
+    <li><a href="#product-section">The Game</a></li>
     <li><a href="#buy">Shop</a></li>
   </ul>
   <a href="#buy" class="nav-cta">Buy Now</a>
@@ -436,8 +486,8 @@
 </section>
 
 <!-- PRODUCT FEATURE -->
-<section class="product-section" id="product">
-  <div class="product-img-stack">
+  <section class="product-section" id="product-section">
+    <div class="product-img-stack">
     <img src="Image_20260407_133352_342.jpeg" alt="Tilt Toss game" />
     <img src="Image_20260407_133352_373__1_.jpeg" alt="Tilt Toss close-up" />
   </div>
@@ -493,23 +543,62 @@
 <!-- BUY / CTA -->
 <section class="cta-section" id="buy">
   <div>
-    <div class="section-label">Ready to toss?</div>
-    <h2 class="section-title">GET THE GAME</h2>
-    <div class="price-block">
-      <div class="price-tag">$149</div>
-      <div class="price-sub">Complete Set — Board + 8 Bags + Rules</div>
-    </div>
-    <a href="mailto:tilttoss@example.com" class="btn-dark">Order Now</a>
-    <ul class="cta-perks">
-      <li>Free shipping on orders over $100</li>
-      <li>Custom branding available</li>
-      <li>Bulk & tournament pricing on request</li>
-      <li>Plays indoors and outdoors</li>
-    </ul>
-  </div>
-  <div style="display:flex; flex-direction:column; justify-content:center; align-items:flex-end;">
+    <div class="section-label">Pre-order now</div>
+    <h2 class="section-title">GET THE <span style="color:var(--navy)">GAME</span></h2>
+    <p style="color:rgba(0,0,0,0.6); font-size:1rem; line-height:1.6; margin-bottom:24px;">Reserve yours today. We'll confirm your order and reach out with next steps within 48 hours.</p>
     <div class="cta-logo-big">TILT<br>TOSS</div>
-    <img src="Tilt_Toss_Logo_HTML.jpeg" alt="Tilt Toss Logo" style="width:200px; margin-top:24px; border-radius:8px;" />
+    <img src="Tilt_Toss_Logo_HTML.jpeg" alt="Tilt Toss Logo" style="width:180px; margin-top:20px; border-radius:8px;" />
+  </div>
+
+  <div class="preorder-form" id="preorderForm">
+    <h3>Pre-Order Form</h3>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="fullname">Full Name</label>
+        <input type="text" id="fullname" placeholder="Jane Smith" required />
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="(555) 000-0000" required />
+      </div>
+    </div>
+
+    <div class="form-group full">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="you@example.com" required />
+    </div>
+
+    <div class="form-group full">
+      <label for="product">Select Your Option</label>
+      <select id="product" onchange="handleProductChange()">
+        <option value="">Choose an option...</option>
+        <option value="basic_no_bags">Basic — Board Only</option>
+        <option value="basic_with_bags">Basic — Board + Bean Bags</option>
+        <option value="customized">Customized</option>
+      </select>
+    </div>
+
+    <div class="option-price" id="priceDisplay" style="display:none;">
+      <span id="priceLabel">—</span>
+      <span id="priceValue">—</span>
+    </div>
+
+    <div class="custom-note" id="customNote">
+      For custom orders, our team will follow up to finalize your design. You can also reach us directly at <a href="mailto:tilttossofficial@gmail.com">tilttossofficial@gmail.com</a>.
+    </div>
+
+    <div class="form-group full" id="customizationGroup" style="display:none;">
+      <label for="customization">Describe Your Customizations</label>
+      <textarea id="customization" placeholder="e.g. Laser engraving with team logo, premium paint finish in school colors, custom stickers..."></textarea>
+    </div>
+
+    <button type="button" class="btn-submit" onclick="submitPreorder()">Submit Pre-Order → </button>
+
+    <div class="form-success" id="formSuccess">
+      <h4>🎉 Pre-Order Received!</h4>
+      <p>Thanks for your order! We'll be in touch at your email within 48 hours to confirm everything.</p>
+    </div>
   </div>
 </section>
 
@@ -531,10 +620,10 @@
   <div>
     <h5>Contact</h5>
     <ul>
-      <li><a href="mailto:tilttoss@example.com">Email Us</a></li>
+      <li><a href="mailto:tilttossofficial@gmail.com">Email Us</a></li>
       <li><a href="#">Instagram</a></li>
       <li><a href="#">TikTok</a></li>
-      <li><a href="#">Custom Orders</a></li>
+      <li><a href="#buy">Custom Orders</a></li>
     </ul>
   </div>
   <div class="footer-bottom">
@@ -543,5 +632,67 @@
   </div>
 </footer>
 
+<script>
+  const prices = {
+    basic_no_bags:   { label: 'Basic — Board Only',          value: '$129.99' },
+    basic_with_bags: { label: 'Basic — Board + Bean Bags',   value: '$149.99' },
+    customized:      { label: 'Customized — Price on Quote', value: 'Contact Us' }
+  };
+
+  function handleProductChange() {
+    const sel = document.getElementById('product').value;
+    const priceDisplay = document.getElementById('priceDisplay');
+    const customNote = document.getElementById('customNote');
+    const customGroup = document.getElementById('customizationGroup');
+
+    if (sel) {
+      priceDisplay.style.display = 'flex';
+      document.getElementById('priceLabel').textContent = prices[sel].label;
+      document.getElementById('priceValue').textContent = prices[sel].value;
+    }
+
+    if (sel === 'customized') {
+      customNote.style.display = 'block';
+      customGroup.style.display = 'flex';
+    } else {
+      customNote.style.display = 'none';
+      customGroup.style.display = 'none';
+    }
+  }
+
+  function submitPreorder() {
+    const name    = document.getElementById('fullname').value.trim();
+    const email   = document.getElementById('email').value.trim();
+    const phone   = document.getElementById('phone').value.trim();
+    const product = document.getElementById('product').value;
+
+    console.log("DEBUG:", {
+      name,
+      email,
+      phone,
+      product
+    });
+    if (!name || !email || !phone || !product) {
+      alert('Please fill out all required fields before submitting.');
+      return;
+    }
+
+    const customization = document.getElementById('customization').value.trim();
+    const sel = prices[product];
+
+    const subject = encodeURIComponent('New Tilt Toss Pre-Order: ' + name);
+    let body = 'New Pre-Order Submission\n\n';
+    body += 'Name: ' + name + '\n';
+    body += 'Email: ' + email + '\n';
+    body += 'Phone: ' + phone + '\n';
+    body += 'Option: ' + sel.label + ' (' + sel.value + ')\n';
+    if (customization) body += '\nCustomization Notes:\n' + customization;
+
+    window.location.href = 'mailto:tilttossofficial@gmail.com?subject=' + subject + '&body=' + encodeURIComponent(body);
+
+    document.getElementById('formSuccess').style.display = 'block';
+    document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+</script>
 </body>
 </html>
