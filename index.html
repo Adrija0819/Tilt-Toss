@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!-- Favicon -->
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon.png">
+<link rel="shortcut icon" href="./favicon.png">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tilt Toss – The Game That Tilts Everything</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy: #1a2a5e;
+    --blue: #2c4ec8;
+    --accent: #9eccf7;
+    --white: #ffffff;
+    --off-white: #f4f4f0;
+    --dark: #0d0d0d;
+    --mid: #333;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Barlow', sans-serif; background: var(--white); color: var(--dark); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 64px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.4);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2rem; letter-spacing: 3px; color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a { color: rgba(255,255,255,0.85); text-decoration: none; font-weight: 600; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    background: var(--accent); color: var(--dark);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 0.9rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 10px 24px; text-decoration: none;
+    clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+    transition: transform 0.15s, background 0.15s;
+  }
+  .nav-cta:hover { transform: scale(1.05); background: #fff; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--navy);
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 100px 80px 60px;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; top: -100px; right: -100px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(44,78,200,0.5) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-text { position: relative; z-index: 2; }
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.85rem; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+  }
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 8vw, 8rem);
+    line-height: 0.9; color: var(--white);
+    margin-bottom: 24px;
+  }
+  .hero-title span { color: var(--accent); display: block; }
+  .hero-sub {
+    font-size: 1.2rem; font-weight: 400; color: rgba(255,255,255,0.75);
+    max-width: 420px; line-height: 1.6; margin-bottom: 40px;
+  }
+  .hero-buttons { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--accent); color: var(--dark);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 16px 40px; text-decoration: none; display: inline-block;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: transform 0.15s;
+  }
+  .btn-primary:hover { transform: scale(1.04); }
+  .btn-secondary {
+    border: 2px solid rgba(255,255,255,0.5); color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 1rem; letter-spacing: 2px; text-transform: uppercase;
+    padding: 14px 36px; text-decoration: none; display: inline-block;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+  .hero-image {
+    position: relative; z-index: 2;
+    display: flex; justify-content: center; align-items: center;
+  }
+  .hero-image img {
+    width: 100%; max-width: 560px;
+    border-radius: 4px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+    transform: rotate(-2deg);
+    transition: transform 0.4s;
+  }
+  .hero-image:hover img { transform: rotate(0deg) scale(1.02); }
+  .hero-stat-bar {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: var(--accent);
+    display: flex; justify-content: center; gap: 80px;
+    padding: 20px 40px;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat-num { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; color: var(--dark); }
+  .hero-stat-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: rgba(0,0,0,0.6); }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    background: var(--dark); overflow: hidden;
+    padding: 14px 0; border-top: 3px solid var(--accent);
+  }
+  .marquee {
+    display: flex; gap: 60px;
+    animation: scroll 18s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.1rem; letter-spacing: 4px; color: rgba(255,255,255,0.3);
+    text-transform: uppercase; flex-shrink: 0;
+  }
+  .marquee-item.accent { color: var(--accent); }
+  @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* HOW TO PLAY */
+  .section { padding: 100px 80px; }
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.8rem; letter-spacing: 4px;
+    text-transform: uppercase; color: var(--blue); margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2.5rem, 5vw, 5rem);
+    line-height: 1; color: var(--dark); margin-bottom: 16px;
+  }
+  .section-title span { color: var(--blue); }
+
+  .how-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    align-items: center; margin-top: 60px;
+  }
+  .steps { display: flex; flex-direction: column; gap: 32px; }
+  .step { display: flex; gap: 24px; align-items: flex-start; }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 3.5rem; line-height: 1; color: var(--accent);
+    flex-shrink: 0; width: 60px;
+    -webkit-text-stroke: 2px var(--navy);
+  }
+  .step-body h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 1.3rem; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 6px; color: var(--dark);
+  }
+  .step-body p { color: #555; font-size: 0.95rem; line-height: 1.6; }
+  .how-img img {
+    width: 100%; border-radius: 4px;
+    box-shadow: 20px 20px 0 var(--accent);
+  }
+
+  /* VIDEOS */
+  .videos-section { background: var(--dark); padding: 100px 80px; }
+  .videos-section .section-title { color: var(--white); }
+  .videos-section .section-title span { color: var(--accent); }
+  .video-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 16px;
+    margin-top: 50px;
+  }
+  .video-wrap { position: relative; overflow: hidden; background: #111; }
+  .video-wrap:first-child { grid-row: span 2; }
+  .video-wrap iframe {
+    width: 100%; display: block;
+    aspect-ratio: 16/9; border: none;
+  }
+  .video-wrap:first-child iframe { height: 100%; min-height: 360px; }
+
+  /* PRODUCT FEATURE */
+  .product-section {
+    background: var(--off-white); padding: 100px 80px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    align-items: center;
+  }
+  .product-img-stack { position: relative; }
+  .product-img-stack img:first-child {
+    width: 85%; border-radius: 4px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+  }
+  .product-img-stack img:last-child {
+    position: absolute; bottom: -30px; right: -20px;
+    width: 55%; border-radius: 4px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    border: 4px solid var(--white);
+  }
+  .product-features { margin: 32px 0; display: flex; flex-direction: column; gap: 18px; }
+  .feature-row { display: flex; gap: 16px; align-items: flex-start; }
+  .feature-icon {
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: var(--navy); color: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  }
+  .feature-text h4 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 1rem; letter-spacing: 1px;
+    text-transform: uppercase; margin-bottom: 2px;
+  }
+  .feature-text p { font-size: 0.88rem; color: #666; line-height: 1.5; }
+
+  /* SOCIAL PROOF */
+  .proof-section { padding: 80px 80px; background: var(--navy); }
+  .proof-section .section-title { color: var(--white); margin-bottom: 50px; }
+  .proof-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .proof-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 32px; border-radius: 2px;
+    transition: background 0.2s;
+  }
+  .proof-card:hover { background: rgba(255,255,255,0.1); }
+  .stars { color: var(--accent); font-size: 1rem; margin-bottom: 12px; letter-spacing: 2px; }
+  .proof-card p { color: rgba(255,255,255,0.8); font-size: 0.95rem; line-height: 1.6; margin-bottom: 16px; font-style: italic; }
+  .proof-name { color: var(--accent); font-weight: 700; font-size: 0.85rem; letter-spacing: 1.5px; text-transform: uppercase; }
+
+  /* BUY / CTA */
+  .cta-section {
+    background: var(--accent); padding: 80px 80px 60px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    align-items: start;
+  }
+  .cta-section .section-title { color: var(--dark); }
+  .cta-section .section-label { color: rgba(0,0,0,0.5); }
+  .cta-logo-big {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(4rem, 8vw, 9rem); line-height: 0.85;
+    color: rgba(0,0,0,0.12); letter-spacing: 4px;
+  }
+  .cta-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* PRICING CARDS */
+  .pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.pricing-card {
+  background: var(--white);
+  padding: 28px 24px;
+  border-radius: 4px;
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
+  text-align: center;
+  position: relative;
+  transition: transform 0.2s;
+}
+
+.pricing-card:hover {
+  transform: translateY(-6px);
+}
+
+.pricing-card.featured {
+  transform: scale(1.05);
+  border: 3px solid var(--navy);
+}
+
+.badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--navy);
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 6px 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.card-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 2px;
+  color: var(--navy);
+}
+
+.card-sub {
+  font-size: 0.85rem;
+  color: #666;
+  margin-bottom: 12px;
+}
+
+.card-price {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.5rem;
+  color: var(--dark);
+  margin: 16px 0;
+}
+
+.card-features {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 24px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.card-features li {
+  margin-bottom: 8px;
+}
+
+.card-btn {
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  padding: 12px 20px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  width: 100%;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  transition: background 0.2s, transform 0.15s;
+}
+
+.card-btn:hover {
+  background: var(--blue);
+  transform: scale(1.03);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .pricing-cards {
+    grid-template-columns: 1fr;
+  }
+
+  /* PRE-ORDER FORM */
+  .pricing-card.featured {
+    transform: scale(1);
+  }
+}
+
+  .preorder-form {
+    background: var(--white);
+    padding: 40px;
+    border-radius: 4px;
+    box-shadow: 8px 8px 0 rgba(0,0,0,0.15);
+    display: flex; flex-direction: column; gap: 20px;
+  }
+  .preorder-form h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem; letter-spacing: 3px; color: var(--navy);
+    border-bottom: 3px solid var(--accent); padding-bottom: 12px;
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.75rem; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--navy);
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    border: 2px solid #ddd; border-radius: 2px;
+    padding: 12px 14px; font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem; color: var(--dark);
+    transition: border-color 0.2s; background: #fafafa;
+    outline: none;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--navy); background: var(--white); }
+  .form-group textarea { resize: vertical; min-height: 100px; }
+  .form-group select { cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%231a2a5e' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px;
+  }
+  .option-price {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--off-white); border: 2px solid #eee;
+    padding: 10px 14px; border-radius: 2px; font-size: 0.9rem;
+  }
+  .option-price span:last-child { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; color: var(--navy); letter-spacing: 1px; }
+  .custom-note {
+    background: #fff8e1; border-left: 4px solid var(--accent);
+    padding: 12px 16px; font-size: 0.88rem; color: #555; line-height: 1.5;
+    display: none;
+  }
+  .custom-note a { color: var(--navy); font-weight: 700; }
+  .btn-submit {
+    background: var(--navy); color: var(--white);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 900; font-size: 1.1rem; letter-spacing: 3px; text-transform: uppercase;
+    padding: 18px; border: none; cursor: pointer;
+    clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+    transition: transform 0.15s, background 0.15s;
+    width: 100%;
+  }
+  .btn-submit:hover { transform: scale(1.02); background: var(--blue); }
+  .form-success {
+    display: none; text-align: center; padding: 20px;
+    background: #e8f5e9; border: 2px solid #66bb6a; border-radius: 2px;
+  }
+  .form-success h4 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; color: #2e7d32; letter-spacing: 2px; margin-bottom: 6px; }
+  .form-success p { font-size: 0.9rem; color: #555; }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark); padding: 50px 80px 30px;
+    display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 60px;
+  }
+  .footer-brand-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; color: var(--white); letter-spacing: 4px; margin-bottom: 12px;
+  }
+  .footer-brand-name span { color: var(--accent); }
+  footer p { color: rgba(255,255,255,0.4); font-size: 0.85rem; line-height: 1.6; max-width: 300px; }
+  footer h5 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700; font-size: 0.8rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 16px;
+  }
+  footer ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  footer ul a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
+  footer ul a:hover { color: var(--white); }
+  .footer-bottom {
+    grid-column: 1/-1; border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 24px; margin-top: 20px;
+    font-size: 0.78rem; color: rgba(255,255,255,0.2);
+    display: flex; justify-content: space-between;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero, .how-grid, .product-section, .cta-section { grid-template-columns: 1fr; padding: 60px 24px; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero { padding-top: 120px; }
+    .section { padding: 70px 24px; }
+    .video-grid { grid-template-columns: 1fr; }
+    .video-wrap:first-child { grid-row: span 1; }
+    .proof-grid { grid-template-columns: 1fr; }
+    .videos-section, .proof-section { padding: 70px 24px; }
+    .hero-stat-bar { gap: 24px; flex-wrap: wrap; }
+    footer { grid-template-columns: 1fr; padding: 40px 24px; }
+    .product-img-stack img:last-child { display: none; }
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>TILT</span> TOSS</a>
+  <ul class="nav-links">
+    <li><a href="#how">How to Play</a></li>
+    <li><a href="#videos">Videos</a></li>
+    <li><a href="#product-section">The Game</a></li>
+    <li><a href="#buy">Shop</a></li>
+  </ul>
+  <a href="#buy" class="nav-cta">Buy Now</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-text">
+    <div class="hero-eyebrow">The next lawn game obsession</div>
+    <h1 class="hero-title">
+      TILT
+      <span>TOSS.</span>
+    </h1>
+    <p class="hero-sub">Toss your bags onto a tilting board, land them in the box—or send the whole thing crashing. Every throw changes the angle. Every round gets wilder.</p>
+    <div class="hero-buttons">
+      <a href="#buy" class="btn-primary">Shop Now</a>
+      <a href="#how" class="btn-secondary">How to Play</a>
+    </div>
+  </div>
+  <div class="hero-image">
+    <img src="Image_20260407_133352_342.jpeg" alt="Tilt Toss game board with bean bags" />
+  </div>
+  <div class="hero-stat-bar">
+    <div class="hero-stat"><div class="hero-stat-num">2–8</div><div class="hero-stat-label">Players</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">360°</div><div class="hero-stat-label">Tilt</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">ANY</div><div class="hero-stat-label">Surface</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">ALL</div><div class="hero-stat-label">Ages</div></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee">
+    <span class="marquee-item">TILT TOSS</span>
+    <span class="marquee-item accent">★</span>
+    <span class="marquee-item">BEAN BAG CHAOS</span>
+    <span class="marquee-item accent">★</span>
+    <span class="marquee-item">CORNHOLE EVOLVED</span>
+    <span class="marquee-item accent">★</span>
+    <span class="marquee-item">TAILGATE SEASON</span>
+    <span class="marquee-item accent">★</span>
+    <span class="marquee-item">INDOOR &amp; OUTDOOR</span>
+    <span class="marquee-item accent">★</span>
+    <span class="marquee-item">TILT TOSS</span>
+    <span class="marquee-item accent">★</span>
+    <span class="marquee-item">BEAN BAG CHAOS</span>
+    <span class="marquee-item accent">★</span>
+    <span class="marquee-item">CORNHOLE EVOLVED</span>
+    <span class="marquee-item accent">★</span>
+    <span class="marquee-item">TAILGATE SEASON</span>
+    <span class="marquee-item accent">★</span>
+    <span class="marquee-item">INDOOR &amp; OUTDOOR</span>
+    <span class="marquee-item accent">★</span>
+  </div>
+</div>
+
+<!-- HOW TO PLAY -->
+<section class="section" id="how">
+  <div class="section-label">Rules of the game</div>
+  <h2 class="section-title">HOW TO <span>PLAY</span></h2>
+  <div class="how-grid">
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h3>Set Up the Board</h3>
+          <p>Place the Tilt Toss platform on any flat surface. The board pivots freely on its center base — that's what makes every round unpredictable.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h3>Toss Your Bags</h3>
+          <p>Players take turns tossing bean bags onto the board. Land one in the center box for max points — but watch out, every bag that lands changes the tilt.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h3>Bags Stay, Score Points</h3>
+          <p>Bags that stay on the board score. Bags in the box score bonus points. Bags that slide or knock others off — that's the chaos that makes Tilt Toss addictive.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h3>First to 21 Wins</h3>
+          <p>Tally your scores each round. First team to reach 21 points takes the crown — then immediately demands a rematch.</p>
+        </div>
+      </div>
+    </div>
+    <div class="how-img">
+      <img src="Image_20260407_133352_373__1_.jpeg" alt="Tilt Toss board top view with bags" />
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<section class="videos-section" id="videos">
+  <div class="section-label" style="color:rgba(255,255,255,0.4)">See it in action</div>
+  <h2 class="section-title">TILT TOSS <span>IN THE WILD</span></h2>
+  <div class="video-grid">
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/nnPmaVeBRaE" title="Tilt Toss Video 1" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/unlBHUMnPVY" title="Tilt Toss Video 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="video-wrap">
+      <iframe src="https://www.youtube.com/embed/nRl6Qfh4ec8" title="Tilt Toss Video 3" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT FEATURE -->
+  <section class="product-section" id="product-section">
+    <div class="product-img-stack">
+    <img src="Image_20260407_133352_342.jpeg" alt="Tilt Toss game" />
+    <img src="Image_20260407_133352_373__1_.jpeg" alt="Tilt Toss close-up" />
+  </div>
+  <div>
+    <div class="section-label">What's in the box</div>
+    <h2 class="section-title">BUILT FOR <span>BATTLE</span></h2>
+    <p style="color:#555; line-height:1.7; margin-bottom:8px;">Tilt Toss is engineered to be portable, durable, and endlessly replayable — whether it's game day, a tailgate, a backyard BBQ, or a rec center showdown.</p>
+    <div class="product-features">
+      <div class="feature-row">
+        <div class="feature-icon">⬡</div>
+        <div class="feature-text"><h4>360° Pivot Base</h4><p>The center-mount design lets the board tilt in any direction, making every bag toss a physics puzzle.</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon">◆</div>
+        <div class="feature-text"><h4>Center Catch Box</h4><p>A raised box in the middle creates a high-stakes target zone worth maximum points.</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon">▲</div>
+        <div class="feature-text"><h4>8 Bean Bags Included</h4><p>Four bags per team. Mix-and-match designs. Premium fill for consistent weight and feel.</p></div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon">●</div>
+        <div class="feature-text"><h4>Custom Team Branding</h4><p>Available with Penn State, custom university, or fully personalized graphics for teams and events.</p></div>
+      </div>
+    </div>
+    <a href="#buy" class="btn-primary" style="margin-top:8px;">Get Yours →</a>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="proof-section">
+  <div class="section-label" style="color:rgba(255,255,255,0.4)">People are talking</div>
+  <h2 class="section-title">THE <span>CROWD GOES WILD</span></h2>
+  <div class="proof-grid">
+    <div class="proof-card">
+      <div class="stars">★★★★★</div>
+      <p>"We brought this to our tailgate and it did not leave the trunk for the rest of the season. Everyone needed to play one more round."</p>
+      <div class="proof-name">— Jake M., Penn State Tailgate</div>
+    </div>
+    <div class="proof-card">
+      <div class="stars">★★★★★</div>
+      <p>"Way more addictive than cornhole. The tilting changes everything — you can't just set it and forget it. Every throw matters."</p>
+      <div class="proof-name">— Sarah T., Campus Rec League</div>
+    </div>
+    <div class="proof-card">
+      <div class="stars">★★★★★</div>
+      <p>"Got it for a party, ended up buying two more as gifts. The custom Penn State graphics are unreal. Feels premium in every way."</p>
+      <div class="proof-name">— Marcus R., Rec Center Director</div>
+    </div>
+  </div>
+</section>
+
+<!-- BUY / CTA -->
+<section class="cta-section" id="buy">
+
+  <!-- LEFT SIDE CONTENT -->
+<div>
+  <div class="section-label">Pre-order now</div>
+  <h2 class="section-title">GET THE <span style="color:var(--navy)">GAME</span></h2>
+  <p>Reserve yours today...</p>
+  <div class="cta-logo-big">TILT<br>TOSS</div>
+  <img ... />
+</div>
+
+  <!-- ✅ ADD PRICING CARDS HERE -->
+<div class="cta-right">
+
+  <!-- PRICING CARDS -->
+  <div class="pricing-cards">
+
+    <!-- Basic -->
+    <div class="pricing-card">
+      <div class="card-title">Basic</div>
+      <div class="card-sub">Board Only</div>
+      <div class="card-price">$129.99</div>
+
+      <ul class="card-features">
+        <li>✔ Tilt Toss Board</li>
+        <li>✔ 360° Pivot Base</li>
+        <li>✔ Portable Design</li>
+      </ul>
+
+      <button class="card-btn" onclick="selectProduct('basic_no_bags')">
+        Choose
+      </button>
+    </div>
+
+    <!-- Standard (Most Popular) -->
+    <div class="pricing-card featured">
+      <div class="badge">Most Popular</div>
+
+      <div class="card-title">Standard</div>
+      <div class="card-sub">Board + Bags</div>
+      <div class="card-price">$149.99</div>
+
+      <ul class="card-features">
+        <li>✔ Everything in Basic</li>
+        <li>✔ 8 Premium Bean Bags</li>
+        <li>✔ Ready to Play Out of Box</li>
+      </ul>
+
+      <button class="card-btn" onclick="selectProduct('basic_with_bags')">
+        Choose
+      </button>
+    </div>
+
+    <!-- Custom -->
+    <div class="pricing-card">
+      <div class="card-title">Custom</div>
+      <div class="card-sub">Fully Personalized</div>
+      <div class="card-price">Quote</div>
+
+      <ul class="card-features">
+        <li>✔ Custom Graphics</li>
+        <li>✔ Team Branding</li>
+        <li>✔ Premium Finishes</li>
+      </ul>
+
+      <button class="card-btn" onclick="selectProduct('customized')">
+        Customize
+      </button>
+    </div>
+
+  </div>
+
+  <!-- PREORDER FORM (UNCHANGED) -->
+  <div class="preorder-form" id="preorderForm">
+    <h3>Pre-Order Form</h3>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="fullname">Full Name</label>
+        <input type="text" id="fullname" placeholder="Jane Smith" required />
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" placeholder="(555) 000-0000" required />
+      </div>
+    </div>
+
+    <div class="form-group full">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" placeholder="you@example.com" required />
+    </div>
+
+    <div class="form-group full">
+      <label for="product">Select Your Option</label>
+      <select id="product" onchange="handleProductChange()">
+        <option value="">Choose an option...</option>
+        <option value="basic_no_bags">Basic — Board Only</option>
+        <option value="basic_with_bags">Basic — Board + Bean Bags</option>
+        <option value="customized">Customized</option>
+      </select>
+    </div>
+
+    <div class="option-price" id="priceDisplay" style="display:none;">
+      <span id="priceLabel">—</span>
+      <span id="priceValue">—</span>
+    </div>
+
+    <div class="custom-note" id="customNote">
+      For custom orders, our team will follow up to finalize your design. You can also reach us directly at <a href="mailto:tilttossofficial@gmail.com">tilttossofficial@gmail.com</a>.
+    </div>
+
+    <div class="form-group full" id="customizationGroup" style="display:none;">
+      <label for="customization">Describe Your Customizations</label>
+      <textarea id="customization" placeholder="e.g. Laser engraving with team logo, premium paint finish in school colors, custom stickers..."></textarea>
+    </div>
+
+    <button type="button" class="btn-submit" onclick="submitPreorder()">Submit Pre-Order → </button>
+
+    <div class="form-success" id="formSuccess">
+      <h4>🎉 Pre-Order Received!</h4>
+      <p>Thanks for your order! We'll be in touch at your email within 48 hours to confirm everything.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand-name"><span>TILT</span> TOSS</div>
+    <p>The lawn game that throws physics at you. Built for tailgates, rec leagues, backyards, and anywhere you want everyone to gather around.</p>
+  </div>
+  <div>
+    <h5>Game</h5>
+    <ul>
+      <li><a href="#how">How to Play</a></li>
+      <li><a href="#product">The Set</a></li>
+      <li><a href="#videos">Videos</a></li>
+      <li><a href="#buy">Buy Now</a></li>
+    </ul>
+  </div>
+  <div>
+    <h5>Contact</h5>
+    <ul>
+      <li><a href="mailto:tilttossofficial@gmail.com">Email Us</a></li>
+      <li><a href="#">Instagram</a></li>
+      <li><a href="#">TikTok</a></li>
+      <li><a href="#buy">Custom Orders</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Tilt Toss. All rights reserved.</span>
+    <span>Made with ⚡ for the tailgate faithful</span>
+  </div>
+</footer>
+
+<script>
+function selectProduct(value) {
+  const dropdown = document.getElementById('product');
+  dropdown.value = value;
+  handleProductChange();
+
+  dropdown.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+  const prices = {
+    basic_no_bags:   { label: 'Basic — Board Only',          value: '$129.99' },
+    basic_with_bags: { label: 'Basic — Board + Bean Bags',   value: '$149.99' },
+    customized:      { label: 'Customized — Price on Quote', value: 'Contact Us' }
+  };
+
+  function handleProductChange() {
+    const sel = document.getElementById('product').value;
+    const priceDisplay = document.getElementById('priceDisplay');
+    const customNote = document.getElementById('customNote');
+    const customGroup = document.getElementById('customizationGroup');
+
+    if (sel) {
+      priceDisplay.style.display = 'flex';
+      document.getElementById('priceLabel').textContent = prices[sel].label;
+      document.getElementById('priceValue').textContent = prices[sel].value;
+    }
+
+    if (sel === 'customized') {
+      customNote.style.display = 'block';
+      customGroup.style.display = 'flex';
+    } else {
+      customNote.style.display = 'none';
+      customGroup.style.display = 'none';
+    }
+  }
+
+  function submitPreorder() {
+    const name    = document.getElementById('fullname').value.trim();
+    const email   = document.getElementById('email').value.trim();
+    const phone   = document.getElementById('phone').value.trim();
+    const product = document.getElementById('product').value;
+
+    console.log("DEBUG:", {
+      name,
+      email,
+      phone,
+      product
+    });
+    if (!name || !email || !phone || !product) {
+      alert('Please fill out all required fields before submitting.');
+      return;
+    }
+
+    const customization = document.getElementById('customization').value.trim();
+    const sel = prices[product];
+
+    const subject = encodeURIComponent('New Tilt Toss Pre-Order: ' + name);
+    let body = 'New Pre-Order Submission\n\n';
+    body += 'Name: ' + name + '\n';
+    body += 'Email: ' + email + '\n';
+    body += 'Phone: ' + phone + '\n';
+    body += 'Option: ' + sel.label + ' (' + sel.value + ')\n';
+    if (customization) body += '\nCustomization Notes:\n' + customization;
+
+    window.location.href = 'mailto:tilttossofficial@gmail.com?subject=' + subject + '&body=' + encodeURIComponent(body);
+
+    document.getElementById('formSuccess').style.display = 'block';
+    document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+</script>
+</body>
+</html>
